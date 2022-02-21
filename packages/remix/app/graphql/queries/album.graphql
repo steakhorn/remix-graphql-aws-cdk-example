@@ -1,0 +1,16 @@
+query Album($albumId: String!) {
+  album(albumId: $albumId) {
+    id
+    title
+    releaseDate
+    artist {
+      name
+    }
+    tracks {
+      id
+      trackNumber
+      title
+      duration
+    }
+  }
+}

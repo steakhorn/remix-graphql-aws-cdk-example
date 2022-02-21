@@ -1,0 +1,29 @@
+overwrite: true
+schema:
+  - ../api/schema.graphql
+  - ../api/appsync.graphql
+documents: "app/graphql/**/*.graphql"
+
+config:
+  scalars:
+    AWSJSON: string
+    AWSDate: string
+    AWSTime: string
+    AWSDateTime: string
+    AWSTimestamp: number
+    AWSEmail: string
+    AWSURL: string
+    AWSPhone: string
+    AWSIPAddress: string
+
+generates:
+  app/urql.tsx:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-urql
+  app/graphql-request.server.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request

@@ -1,0 +1,43 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+model Artist {
+  id            String    @id @default(uuid())
+  name          String
+  albums        Album[]
+  tracks        Track[]
+}
+
+model Album {
+  id            String    @id @default(uuid())
+  title         String
+  releaseDate   DateTime
+  artist        Artist    @relation(fields: [artistId], references: [id])
+  artistId      String
+  tracks        Track[]
+}
+
+model Track {
+  id            String    @id @default(uuid())
+  title         String
+  artists       Artist[]
+  album         Album     @relation(fields: [albumId], references: [id])
+  albumId       String
+  genres        Genre[]
+  /// Duration in seconds
+  duration      Int
+  trackNumber   Int
+}
+
+model Genre {
+  id            String    @id @default(uuid())
+  name          String
+  tracks        Track[]
+}

@@ -1,0 +1,38 @@
+type Artist {
+  id: String!
+  name: String!
+  albums: [Album!]!
+  tracks: [Track!]!
+}
+
+type Album {
+  id: String!
+  title: String!
+  releaseDate: AWSDateTime!
+  artist: Artist!
+  artistId: String!
+  tracks: [Track!]!
+}
+
+type Track {
+  id: String!
+  title: String!
+  album: Album!
+  albumId: String!
+  artists: [Artist!]!
+  genres: [Genre!]!
+  duration: Int!
+  trackNumber: Int!
+}
+
+type Genre {
+  id: String!
+  name: String!
+  tracks: [Track!]!
+}
+
+type Query {
+  albums: [Album!]!
+  album(albumId: String!): Album
+  track(trackId: String!): Track
+}

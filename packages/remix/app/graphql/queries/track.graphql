@@ -1,0 +1,18 @@
+query Track($trackId: String!) {
+  track(trackId: $trackId) {
+    id
+    trackNumber
+    title
+    duration
+    album {
+      id
+      title
+    }
+    artists {
+      name
+    }
+    genres {
+      name
+    }
+  }
+}

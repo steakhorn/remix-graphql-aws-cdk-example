@@ -1,0 +1,15 @@
+# GraphCDN configuration. Learn more at https://docs.graphcdn.io/docs/cli
+injectHeaders: true
+enablePlayground: true
+headers:
+  x-api-key: da2-4hwqyncgyfd3xndoawskzweu2e
+rootTypeNames:
+  query: Query
+rules:
+  - types:
+      - Query
+    maxAge: 90000
+    swr: 90000
+    description: Cache everything (default)
+name: shanecav-music-app
+originUrl: https://uzrbnytbavb3dmakg22qe6gpny.appsync-api.us-east-1.amazonaws.com/graphql

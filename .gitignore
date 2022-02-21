@@ -1,0 +1,17 @@
+/node_modules
+/packages/*/node_modules
+
+/packages/api/.env
+/packages/api/**/*.js
+/packages/api/appsync.d.ts
+
+/packages/infrastructure/.cdk.staging
+/packages/infrastructure/cdk.out
+/packages/infrastructure/cdk-outputs.json
+
+/packages/remix/.cache
+/packages/remix/public/build
+/packages/remix/server/build
+/packages/remix/app/urql.tsx
+/packages/remix/app/graphql-request.server.ts
+/packages/remix/app/tailwind.css

@@ -1,0 +1,10 @@
+query Albums {
+  albums {
+    id
+    title
+    releaseDate
+    artist {
+      name
+    }
+  }
+}

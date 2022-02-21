@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "name": "@shanecav-example-project/api",
+  "version": "0.0.0",
+  "description": "",
+  "license": "UNLICENSED",
+  "main": "index.ts",
+  "dependencies": {
+    "@prisma/client": "^3.9.2",
+    "aws-sdk": "^2.1067.0",
+    "prisma": "^3.9.2",
+    "ts-pattern": "^3.3.5"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^2.6.2",
+    "@graphql-codegen/typescript": "^2.4.5",
+    "@types/aws-lambda": "^8.10.92",
+    "@types/node": "^14.14.35",
+    "ts-node": "^10.5.0",
+    "typescript": "^4.5.5"
+  },
+  "scripts": {
+    "postinstall": "npm run codegen",
+    "build": "npm run codegen && tsc prisma/seed.ts",
+    "codegen": "graphql-codegen && prisma generate",
+    "prisma": "prisma",
+    "graphcdn": "npx graphcdn"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  }
+}

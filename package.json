@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "name": "shanecav-example-project",
+  "version": "0.0.0",
+  "license": "UNLICENSED",
+  "workspaces": [
+    "packages/api",
+    "packages/remix",
+    "packages/infrastructure"
+  ],
+  "scripts": {
+    "api:build": "npm run --prefix packages/api build",
+    "api:codegen": "npm run --prefix packages/api codegen",
+    "api:prisma": "npm run --prefix packages/api prisma",
+    "api:graphcdn": "npm run --prefix packages/api graphcdn",
+    "remix:dev": "npm run dev -w packages/remix",
+    "remix:build": "npm run build -w packages/remix",
+    "remix:codegen": "npm run codegen -w packages/remix",
+    "cdk:bootstrap": "npm run --prefix packages/infrastructure bootstrap",
+    "cdk:synth": "npm run --prefix packages/infrastructure synth",
+    "cdk:deploy": "npm run --prefix packages/infrastructure deploy",
+    "build": "npm run api:build && npm run remix:build",
+    "deploy": "npm run build && npm run cdk:deploy"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}
