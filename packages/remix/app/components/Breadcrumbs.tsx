@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { NavLink, useMatches } from "remix";
 
 export type BreadcrumbHandle<TData = any> = {
-  breadcrumb: ({ data }: { data: TData }) => ReactNode;
+  breadcrumb: ({ data }: { data?: TData }) => ReactNode;
 };
 
 export function BreadcrumbLink({

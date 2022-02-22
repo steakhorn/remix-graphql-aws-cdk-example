@@ -4,6 +4,7 @@ import { BreadcrumbHandle } from "~/components/Breadcrumbs";
 
 import { Heading } from "~/components/Heading";
 import { Link } from "~/components/Link";
+import { ResourceErrorPage } from "~/components/ResourceErrorPage";
 
 export const loader = async ({ params }: Parameters<LoaderFunction>[0]) => {
   try {
@@ -66,14 +67,19 @@ export default function TrackPage() {
 }
 
 export const handle: BreadcrumbHandle<TrackData> = {
-  breadcrumb: ({ data }) => `Track: ${data.track.title}`,
+  breadcrumb: ({ data }) =>
+    data ? `Track: ${data.track.title}` : "Track not found",
 };
 
-export const meta = ({ data }: { data: TrackData }) => {
+export const meta = ({ data }: { data?: TrackData }) => {
   return {
-    title: `Track: ${data.track.title}`,
+    title: data ? `Track: ${data.track.title}` : "Track not found",
   };
 };
+
+export function CatchBoundary() {
+  return <ResourceErrorPage resourceName="track" />;
+}
 
 export function formatDuration(duration: number) {
   const minutes = Math.floor(duration / 60);
