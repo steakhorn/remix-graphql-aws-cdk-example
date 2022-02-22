@@ -13,7 +13,11 @@ export function BreadcrumbLink({
   to: string;
 }) {
   return (
-    <NavLink to={to} className="font-medium text-gray-500 hover:text-gray-700">
+    <NavLink
+      to={to}
+      className="font-medium text-gray-500 hover:text-gray-700"
+      prefetch="intent"
+    >
       {children}
     </NavLink>
   );
