@@ -38,7 +38,7 @@ export function Breadcrumbs() {
     >
       <ol
         role="list"
-        className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4 sm:px-6 lg:px-8 text-gray-400 text-sm"
+        className="max-w-screen-xl w-full mx-auto px-4 flex space-x-3 text-xs sm:text-sm sm:space-x-4 sm:px-6 lg:px-8 text-gray-400"
       >
         {items.map((match, index) => {
           const { content, preventLink } = match.handle.breadcrumb(match);
@@ -78,7 +78,7 @@ function BreadcrumbItem({
   return (
     <li className="flex">
       <div className="flex items-center">
-        <span className="mr-4">{inner}</span>
+        <span className="mr-3 sm:mr-4">{inner}</span>
         <svg
           className={`flex-shrink-0 w-6 h-full text-gray-200 ${
             isLast ? "opacity-0" : ""

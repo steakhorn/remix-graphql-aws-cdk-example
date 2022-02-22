@@ -15,8 +15,8 @@ import {
   isServerSide,
   urqlDataPlaceholder,
 } from "~/utils/urql-client";
-import { Breadcrumbs } from "./components/Breadcrumbs";
-import type { BreadcrumbHandle } from "~/components/Breadcrumbs";
+import { Breadcrumbs, BreadcrumbHandle } from "./components/Breadcrumbs";
+import { Link } from "./components/Link";
 
 import tailwindStyles from "./tailwind.css";
 import favicon from "~/images/favicon.png";
@@ -86,13 +86,21 @@ function Layout({ children }: React.PropsWithChildren<{}>) {
       <div className="bg-indigo-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <img className="h-8 w-8" src={favicon} alt="Workflow" />
-              </div>
-              <h3 className="ml-4 text-md font-semibold text-indigo-100 uppercase tracking-widest">
-                Music App
-              </h3>
+            <div className="group">
+              <Link to="/">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <img
+                      className="h-8 w-8 group-hover:rotate-180 duration-300 ease-out"
+                      src={favicon}
+                      alt="Music App"
+                    />
+                  </div>
+                  <h3 className="ml-4 text-md font-semibold text-indigo-100 uppercase tracking-widest">
+                    Music App
+                  </h3>
+                </div>
+              </Link>
             </div>
             <div className="hidden md:block">
               <div className="ml-4 flex items-center md:ml-6"></div>

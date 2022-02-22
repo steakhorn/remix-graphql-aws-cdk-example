@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { LoaderFunction, useLoaderData } from "remix";
 import { gql } from "~/gql.server";
 import { BreadcrumbHandle } from "~/components/Breadcrumbs";
@@ -30,39 +31,39 @@ export default function TrackPage() {
     <main>
       <Heading
         title={track.title}
-        subHeading={track.artists.map((a) => a.name).join(", ")}
+        subHeading={listFormatter.format(track.artists.map((a) => a.name))}
       />
-      <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-        <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
-          <dl className="sm:divide-y sm:divide-gray-200">
-            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Album</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                <Link to={`/album/${track.album.id}`}>{track.album.title}</Link>
-              </dd>
-            </div>
-            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Duration</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {formatDuration(track.duration)}
-              </dd>
-            </div>
-            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Artist(s)</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {listFormatter.format(track.artists.map((a) => a.name))}
-              </dd>
-            </div>
-            <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">Genre(s)</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {listFormatter.format(track.genres.map((a) => a.name))}
-              </dd>
-            </div>
+      <div className="bg-white shadow overflow-hidden rounded-lg">
+        <div className="border-t border-gray-200 p-0">
+          <dl className="divide-y divide-gray-200">
+            <Row label="Album">
+              <Link to={`/album/${track.album.id}`}>{track.album.title}</Link>
+            </Row>
+            <Row label="Duration">{formatDuration(track.duration)}</Row>
+            <Row label="Artist(s)">
+              {listFormatter.format(track.artists.map((a) => a.name))}
+            </Row>
+            <Row label="Genre(s)">
+              {listFormatter.format(track.genres.map((a) => a.name))}
+            </Row>
           </dl>
         </div>
       </div>
     </main>
+  );
+}
+
+type RowProps = { children: ReactNode; label: ReactNode };
+function Row({ children, label }: RowProps) {
+  return (
+    <div className="p-4 sm:flex">
+      <dt className="text-sm font-medium text-gray-500 flex-none w-36">
+        {label}
+      </dt>
+      <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:flex-1">
+        {children}
+      </dd>
+    </div>
   );
 }
 
