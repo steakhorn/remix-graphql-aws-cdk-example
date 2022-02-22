@@ -18,8 +18,10 @@ export const loader = async ({ params }: Parameters<LoaderFunction>[0]) => {
 export type AlbumData = Awaited<ReturnType<typeof loader>>;
 
 export const handle: BreadcrumbHandle<AlbumData> = {
-  breadcrumb: ({ data }) =>
-    data ? `Album: ${data.album.title}` : "Album not found",
+  breadcrumb: ({ data }) => ({
+    content: data ? `Album: ${data.album.title}` : "Album not found",
+    preventLink: !data,
+  }),
 };
 
 export const meta = ({ data }: { data?: AlbumData }) => {

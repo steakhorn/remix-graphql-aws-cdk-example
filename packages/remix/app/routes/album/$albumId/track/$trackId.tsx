@@ -67,8 +67,10 @@ export default function TrackPage() {
 }
 
 export const handle: BreadcrumbHandle<TrackData> = {
-  breadcrumb: ({ data }) =>
-    data ? `Track: ${data.track.title}` : "Track not found",
+  breadcrumb: ({ data }) => ({
+    content: data ? `Track: ${data.track.title}` : "Track not found",
+    preventLink: !data,
+  }),
 };
 
 export const meta = ({ data }: { data?: TrackData }) => {

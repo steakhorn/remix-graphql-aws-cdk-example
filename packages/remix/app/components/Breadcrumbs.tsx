@@ -2,7 +2,10 @@ import type { ReactNode } from "react";
 import { NavLink, useMatches } from "remix";
 
 export type BreadcrumbHandle<TData = any> = {
-  breadcrumb: ({ data }: { data?: TData }) => ReactNode;
+  breadcrumb: ({ data }: { data?: TData }) => {
+    content: ReactNode;
+    preventLink?: boolean;
+  };
 };
 
 export function BreadcrumbLink({
@@ -38,13 +41,15 @@ export function Breadcrumbs() {
         className="max-w-screen-xl w-full mx-auto px-4 flex space-x-4 sm:px-6 lg:px-8 text-gray-400 text-sm"
       >
         {items.map((match, index) => {
+          const { content, preventLink } = match.handle.breadcrumb(match);
           return (
             <BreadcrumbItem
               key={index}
               isLast={index === items.length - 1}
               pathname={match.pathname}
+              preventLink={preventLink}
             >
-              {match.handle.breadcrumb(match)}
+              {content}
             </BreadcrumbItem>
           );
         })}
@@ -57,16 +62,19 @@ function BreadcrumbItem({
   children,
   isLast,
   pathname,
+  preventLink,
 }: {
   children: ReactNode;
   isLast: boolean;
   pathname: string;
+  preventLink?: boolean;
 }) {
-  const inner = isLast ? (
-    children
-  ) : (
-    <BreadcrumbLink to={pathname}>{children}</BreadcrumbLink>
-  );
+  const inner =
+    preventLink || isLast ? (
+      children
+    ) : (
+      <BreadcrumbLink to={pathname}>{children}</BreadcrumbLink>
+    );
   return (
     <li className="flex">
       <div className="flex items-center">

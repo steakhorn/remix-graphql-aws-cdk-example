@@ -43,6 +43,22 @@ export class Webapp extends Construct {
 
     assetsBucket.grantRead(assetsBucketOriginAccessIdentity);
 
+    const bucketDeployment = new s3deploy.BucketDeployment(
+      this,
+      "AssetsDeployment",
+      {
+        destinationBucket: assetsBucket,
+        prune: true,
+        sources: [
+          s3deploy.Source.asset(path.join(__dirname, "../../../remix/public")),
+        ],
+        cacheControl: [
+          s3deploy.CacheControl.maxAge(cdk.Duration.days(365)),
+          s3deploy.CacheControl.sMaxAge(cdk.Duration.days(365)),
+        ],
+      }
+    );
+
     const edgeFn = new lambdanode.NodejsFunction(this, "EdgeFn", {
       currentVersionOptions: {
         removalPolicy: cdk.RemovalPolicy.DESTROY,
@@ -60,6 +76,12 @@ export class Webapp extends Construct {
       memorySize: 1024,
       timeout: cdk.Duration.seconds(10),
     });
+    /**
+     * The webapp's public assets must be uploaded *before* the Edge function is
+     * created/updated, otherwise the Remix server will try to reference assets
+     * that aren't yet available.
+     */
+    edgeFn.node.addDependency(bucketDeployment);
 
     const distribution = new cloudfront.Distribution(this, "Distribution", {
       defaultBehavior: {
@@ -98,17 +120,18 @@ export class Webapp extends Construct {
       },
     });
 
-    new s3deploy.BucketDeployment(this, "AssetsDeployment", {
+    /**
+     * Dummy S3 deployment just used to invalidate the CloudFront distribution's cache.
+     * This can't be done in our "real" S3 deployment because that deployment has to
+     * happen before the Edge function (defined in the distribution) is created.
+     */
+    new s3deploy.BucketDeployment(this, "DistributionInvalidator", {
       destinationBucket: assetsBucket,
       distribution,
-      prune: true,
       sources: [
-        s3deploy.Source.asset(path.join(__dirname, "../../../remix/public")),
+        s3deploy.Source.data("distributionInvalidator", `${Date.now()}`),
       ],
-      cacheControl: [
-        s3deploy.CacheControl.maxAge(cdk.Duration.days(365)),
-        s3deploy.CacheControl.sMaxAge(cdk.Duration.days(365)),
-      ],
+      prune: false, // IMPORTANT!!! Omitting this will remove all other items from the bucket.
     });
 
     const canary = new synthetics.Canary(this, "MyCanary", {
