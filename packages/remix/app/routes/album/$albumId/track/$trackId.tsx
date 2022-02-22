@@ -1,4 +1,4 @@
-import { LoaderFunction, useLoaderData, MetaFunction } from "remix";
+import { LoaderFunction, useLoaderData } from "remix";
 import { gql } from "~/gql.server";
 import { BreadcrumbHandle } from "~/components/Breadcrumbs";
 
