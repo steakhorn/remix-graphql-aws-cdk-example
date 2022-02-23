@@ -20,11 +20,8 @@ export function getGraphqlEndpoint(request: Request): GraphqlEndpoint {
    * values come from environment variables (i.e. our .env file).
    */
 
-  // You probably don't need this, but it's available.
-  const appsyncUrl = request.headers.get("graphqlUrl")!;
-
-  // Hard-coding the GraphCDN endpoint (there's no way to get it from CDK)
-  const graphqlUrl = "https://shanecav-music-app.graphcdn.app";
+  const graphqlUrl =
+    request.headers.get("graphqlUrl") || process?.env?.GRAPHQL_URL || "";
   const graphqlApiKey =
     request.headers.get("graphqlApiKey") || process?.env?.GRAPHQL_API_KEY || "";
 
