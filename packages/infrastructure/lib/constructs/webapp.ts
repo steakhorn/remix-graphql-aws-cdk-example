@@ -18,7 +18,7 @@ import * as synthetics from "@aws-cdk/aws-synthetics-alpha";
 
 interface WebappStackProps {
   graphqlUrl: string;
-  apiKey: string;
+  graphqlApiKey: string;
 }
 
 export class Webapp extends Construct {
@@ -39,6 +39,10 @@ export class Webapp extends Construct {
 
     const assetsBucketS3Origin = new origin.S3Origin(assetsBucket, {
       originAccessIdentity: assetsBucketOriginAccessIdentity,
+      customHeaders: {
+        graphqlApiKey: props.graphqlApiKey,
+        graphqlUrl: props.graphqlUrl,
+      },
     });
 
     assetsBucket.grantRead(assetsBucketOriginAccessIdentity);

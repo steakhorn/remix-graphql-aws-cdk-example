@@ -17,6 +17,7 @@ import type {
   CloudFrontRequestEvent,
   CloudFrontRequestHandler,
   CloudFrontHeaders,
+  CloudFrontRequest,
 } from "aws-lambda";
 import type {
   AppLoadContext,
@@ -83,12 +84,13 @@ export function createCloudFrontHeaders(
   return headers;
 }
 
-export function createRemixHeaders(
-  requestHeaders: CloudFrontHeaders
-): NodeHeaders {
+export function createRemixHeaders(request: CloudFrontRequest): NodeHeaders {
+  const requestHeaders = request.headers;
+  const customHeaders = request.origin?.s3?.customHeaders || {};
+  const allHeaders: CloudFrontHeaders = { ...requestHeaders, ...customHeaders };
   let headers = new NodeHeaders();
 
-  for (let [key, values] of Object.entries(requestHeaders)) {
+  for (let [key, values] of Object.entries(allHeaders)) {
     for (let { value } of values) {
       if (value) {
         headers.append(key, value);
@@ -110,7 +112,7 @@ export function createRemixRequest(event: CloudFrontRequestEvent): NodeRequest {
 
   return new NodeRequest(url.toString(), {
     method: request.method,
-    headers: createRemixHeaders(request.headers),
+    headers: createRemixHeaders(request),
     body: request.body?.data
       ? request.body.encoding === "base64"
         ? Buffer.from(request.body.data, "base64").toString()

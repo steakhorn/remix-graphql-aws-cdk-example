@@ -7,19 +7,37 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
+  useLoaderData,
 } from "remix";
-import type { LinksFunction } from "remix";
-
-import {
-  UrqlProvider,
-  isServerSide,
-  urqlDataPlaceholder,
-} from "~/utils/urql-client";
+import { LoaderFunction, getGraphqlEndpoint } from "~/utils/loader.server";
+import { getUrql, isServerSide, urqlDataPlaceholder } from "~/urql-client";
 import { Breadcrumbs, BreadcrumbHandle } from "./components/Breadcrumbs";
 import { Link } from "./components/Link";
-
 import tailwindStyles from "./tailwind.css";
 import favicon from "~/images/favicon.png";
+
+import type { LinksFunction } from "remix";
+import type { GraphqlEndpoint } from "~/utils/types";
+
+export const loader: LoaderFunction<GraphqlEndpoint> = ({ request }) => {
+  try {
+    /**
+     * This app is designed so that the AppSync API Key is the authentication
+     * method used for publicly accessible data. So in our case this isn't a
+     * secret we're concerned about exposing to the client side.
+     */
+    return getGraphqlEndpoint(request);
+  } catch (err) {
+    throw new Response("Unable to retrieve data from the server", {
+      status: 500,
+    });
+  }
+};
+/**
+ * The root loader is only used to hydrate our GraphQL endpoint data
+ * once - we never need it to load again.
+ */
+export const unstable_shouldReload = () => false;
 
 export const handle: BreadcrumbHandle = {
   breadcrumb: () => ({ content: "Home" }),
@@ -38,14 +56,16 @@ export let links: LinksFunction = () => {
  * component for your app.
  */
 export default function App() {
+  const graphqlEndpoint = useLoaderData();
+  const { Provider } = getUrql(graphqlEndpoint);
   return (
-    <UrqlProvider>
+    <Provider>
       <Document>
         <Layout>
           <Outlet />
         </Layout>
       </Document>
-    </UrqlProvider>
+    </Provider>
   );
 }
 

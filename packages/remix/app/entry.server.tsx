@@ -2,9 +2,8 @@ import { renderToString } from "react-dom/server";
 import { RemixServer } from "remix";
 import prepass from "react-ssr-prepass";
 import DOMPurify from "isomorphic-dompurify";
+import { ssr, urqlDataPlaceholder } from "./urql-client";
 import type { EntryContext } from "remix";
-
-import { ssr, urqlDataPlaceholder } from "./utils/urql-client";
 
 export default async function handleRequest(
   request: Request,

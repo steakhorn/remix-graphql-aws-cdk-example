@@ -8,8 +8,10 @@
 /packages/infrastructure/.cdk.staging
 /packages/infrastructure/cdk.out
 /packages/infrastructure/cdk-outputs.json
+/packages/infrastructure/graphcdn.yml
 
 /packages/remix/.cache
+/packages/remix/.env
 /packages/remix/public/build
 /packages/remix/server/build
 /packages/remix/app/urql.tsx

@@ -1,14 +1,24 @@
 import { MetaFunction, useLoaderData } from "remix";
-import { gql, AlbumsQuery } from "~/gql.server";
+import { getGqlClient, AlbumsQuery } from "~/gql.server";
 import { Table, Column } from "~/components/Table";
 import { Heading } from "~/components/Heading";
 import { Link } from "~/components/Link";
+import type { LoaderFunction } from "~/utils/loader.server";
 import type { BreadcrumbHandle } from "~/components/Breadcrumbs";
 
-export const loader = async () => {
+type Albums = AlbumsQuery["albums"];
+type Album = Albums[number];
+type LoaderData = {
+  albums: Albums;
+};
+
+export const loader: LoaderFunction<LoaderData> = async ({ request }) => {
   try {
+    const gql = getGqlClient(request);
     const { albums } = await gql.Albums();
-    return { albums };
+    return {
+      albums,
+    };
   } catch (err) {
     throw new Response("Not Found", { status: 404 });
   }
@@ -22,10 +32,8 @@ export let meta: MetaFunction = () => {
 };
 
 export const handle: BreadcrumbHandle = {
-  breadcrumb: () => "Albums",
+  breadcrumb: () => ({ content: "Albums" }),
 };
-
-type Album = AlbumsQuery["albums"][number];
 
 const columns: Column<Album>[] = [
   {
@@ -54,7 +62,7 @@ const columns: Column<Album>[] = [
 ];
 
 export default function Index() {
-  const { albums } = useLoaderData<Awaited<ReturnType<typeof loader>>>();
+  const { albums } = useLoaderData<LoaderData>();
 
   return (
     <main>

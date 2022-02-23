@@ -6,8 +6,7 @@ import * as secretsmanager from "aws-cdk-lib/aws-secretsmanager";
 
 /**
  * This construct contains the database for this app, as well as the associated
- * VPC and security group. RDS databases are not publicly available, so we're
- * accessing it via Lambdas with inbound access to the DB's security group.
+ * VPC and security group.
  */
 
 interface DatabaseProps {

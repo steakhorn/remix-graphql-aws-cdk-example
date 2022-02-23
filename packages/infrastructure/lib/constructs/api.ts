@@ -1,4 +1,6 @@
 import path from "path";
+import fs from "fs";
+import YAML from "yaml";
 import { Construct } from "constructs";
 import * as cdk from "aws-cdk-lib";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
@@ -37,6 +39,21 @@ export class Api extends Construct {
         defaultAuthorization: {
           authorizationType: appsync.AuthorizationType.API_KEY,
           apiKeyConfig: {
+            /**
+             * This app is designed so that the API key is the authorization
+             * method used for publicly available requests to our API. So in
+             * this case the API is not a secret that we need to protect. If
+             * you want to add more types of authentication then you can add
+             * additional authorization configs to this API.
+             *
+             * Examples:
+             * - Cognito for authorizing logged in users
+             * - IAM for giving a Lambda more permissions
+             *
+             * The API key's expiration date will get refreshed to 365 days
+             * from every time a new CDK deployment happens. So just make
+             * sure you don't let an app sit for a year with no deployments :)
+             */
             expires: cdk.Expiration.after(cdk.Duration.days(365)),
           },
         },
@@ -68,15 +85,36 @@ export class Api extends Construct {
       lambdaDs.createResolver({ typeName, fieldName });
     }
 
-    new cdk.CfnOutput(this, "AppSyncAPIURL", {
-      value: api.graphqlUrl,
+    /**
+     * We attempt to read a graphcdn.yml file (if there is one) to get the
+     * service name to build the GraphQL endpoint URL. Otherwise, we fall
+     * back to the AppSync endpoint URL.
+     *
+     * If you're using a custom domain with GraphCDN, or there's some other
+     * reason you need a different endpoint, change this code as needed.
+     */
+    try {
+      const graphcdnConfigFile = fs.readFileSync(
+        path.join(__dirname, "../../graphcdn.yml"),
+        "utf8"
+      );
+      const graphcdnConfig = YAML.parse(graphcdnConfigFile);
+      if (typeof graphcdnConfig.name === "string") {
+        this.graphqlUrl = `https://${graphcdnConfig.name}.graphcdn.app`;
+      } else {
+        throw new Error("Couldn't find GraphCDN service name");
+      }
+    } catch (err) {
+      this.graphqlUrl = api.graphqlUrl;
+    }
+    new cdk.CfnOutput(this, "GraphQlAPIURL", {
+      value: this.graphqlUrl,
     });
-    this.graphqlUrl = api.graphqlUrl;
 
-    new cdk.CfnOutput(this, "AppSyncAPIKey", {
-      value: api.apiKey || "",
-    });
     this.apiKey = api.apiKey;
+    new cdk.CfnOutput(this, "AppSyncAPIKey", {
+      value: this.apiKey || "",
+    });
 
     new cdk.CfnOutput(this, `ApiDataSourceLambdaArn`, {
       value: apiDataSourceLambda.functionArn,

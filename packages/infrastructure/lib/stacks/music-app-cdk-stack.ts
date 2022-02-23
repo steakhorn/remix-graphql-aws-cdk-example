@@ -37,7 +37,7 @@ export class MusicAppCdkStack extends cdk.Stack {
 
     const webapp = new Webapp(this, "MusicApp", {
       graphqlUrl: api.graphqlUrl,
-      apiKey: api.apiKey || "",
+      graphqlApiKey: api.apiKey!,
     });
   }
 }

@@ -1,8 +1,12 @@
 import { GraphQLClient } from "graphql-request";
 import { getSdk } from "~/graphql-request.server";
 export * from "~/graphql-request.server";
+import { getGraphqlEndpoint } from "~/utils/loader.server";
 
-const client = new GraphQLClient("https://shanecav-music-app.graphcdn.app", {
-  headers: { "x-api-key": "da2-4hwqyncgyfd3xndoawskzweu2e" },
-});
-export const gql = getSdk(client);
+export function getGqlClient(request: Request) {
+  const { graphqlUrl, graphqlApiKey } = getGraphqlEndpoint(request);
+  const client = new GraphQLClient(graphqlUrl, {
+    headers: { "x-api-key": graphqlApiKey },
+  });
+  return getSdk(client);
+}

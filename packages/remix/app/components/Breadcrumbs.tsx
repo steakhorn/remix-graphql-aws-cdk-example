@@ -29,7 +29,7 @@ export function BreadcrumbLink({
 export function Breadcrumbs() {
   const matches = useMatches();
   const items = matches.filter(
-    (match) => match.handle && match.handle.breadcrumb
+    (match) => !!match.handle?.breadcrumb(match)?.content
   );
   return (
     <nav

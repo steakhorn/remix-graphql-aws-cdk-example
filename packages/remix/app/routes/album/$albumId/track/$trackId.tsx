@@ -1,14 +1,22 @@
 import type { ReactNode } from "react";
-import { LoaderFunction, useLoaderData } from "remix";
-import { gql } from "~/gql.server";
+import { useLoaderData } from "remix";
+import { getGqlClient, TrackQuery } from "~/gql.server";
 import { BreadcrumbHandle } from "~/components/Breadcrumbs";
+import type { LoaderFunction } from "~/utils/loader.server";
+import type { NonNullable } from "~/utils/types";
 
 import { Heading } from "~/components/Heading";
 import { Link } from "~/components/Link";
 import { ResourceErrorPage } from "~/components/ResourceErrorPage";
 
-export const loader = async ({ params }: Parameters<LoaderFunction>[0]) => {
+type LoaderData = { track: NonNullable<TrackQuery["track"]> };
+
+export const loader: LoaderFunction<LoaderData> = async ({
+  params,
+  request,
+}) => {
   try {
+    const gql = getGqlClient(request);
     const { track } = await gql.Track({ trackId: params.trackId! });
     if (!track) {
       throw new Response("Track not found", { status: 404 });
@@ -19,10 +27,8 @@ export const loader = async ({ params }: Parameters<LoaderFunction>[0]) => {
   }
 };
 
-export type TrackData = Awaited<ReturnType<typeof loader>>;
-
 export default function TrackPage() {
-  const { track } = useLoaderData<Awaited<ReturnType<typeof loader>>>();
+  const { track } = useLoaderData<LoaderData>();
   const listFormatter = new Intl.ListFormat("en", {
     style: "long",
     type: "conjunction",
@@ -67,16 +73,16 @@ function Row({ children, label }: RowProps) {
   );
 }
 
-export const handle: BreadcrumbHandle<TrackData> = {
+export const handle: BreadcrumbHandle<TrackQuery> = {
   breadcrumb: ({ data }) => ({
-    content: data ? `Track: ${data.track.title}` : "Track not found",
+    content: data?.track ? `Track: ${data.track.title}` : "Track not found",
     preventLink: !data,
   }),
 };
 
-export const meta = ({ data }: { data?: TrackData }) => {
+export const meta = ({ data }: { data?: TrackQuery }) => {
   return {
-    title: data ? `Track: ${data.track.title}` : "Track not found",
+    title: data?.track ? `Track: ${data.track.title}` : "Track not found",
   };
 };
 
