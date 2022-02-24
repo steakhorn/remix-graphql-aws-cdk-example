@@ -15,7 +15,7 @@ You can see it running at https://d1fr84q9611u1h.cloudfront.net/ (unless I take 
 
 ### API:
 
-- [Prisma](https://www.prisma.io/)
+- GraphQL with [Prisma](https://www.prisma.io/) in the resolvers
 
 ### AWS Infrastructure:
 
@@ -43,9 +43,9 @@ This package uses npm workspaces. I've added some root scripts to make interacti
 >
 > Don't forget to run `npm run cdk:destroy` when you're done!
 
-Before doing anything, you'll need an AWS account that's been bootstrapped for CDK in `us-east-1`. You'll also need the AWS CLI installed and configured to access your account.
+Note: I haven't actually attempted these steps from a fresh clone (I built this package up over time). It's possible things may not work exactly as described. If that's the case, I apologize :(
 
-I haven't actually attempted these steps from a fresh clone (I built this package up over time). It's possible things may not work exactly as described. If that's the case, I apologize :(
+Before doing anything, you'll need an AWS account that's been bootstrapped for CDK in `us-east-1`. You'll also need the AWS CLI installed and configured to access your account.
 
 To deploy everything to your AWS account:
 
@@ -79,7 +79,7 @@ npm run api:prisma migrate seed
 
 If all goes well, your database should now be ready for the Prisma queries defined in the AppSync resolver Lambda function.
 
-At this point, you should be able to view the app at its CloudFront URL. This logged as a CDK output after a successful deployment - it's the one with "CloudFrontDomain" in its name. You can also view all CDK outputs in the AWS CloudFormation console at any time.
+At this point, you should be able to view the app at its CloudFront URL. This URL is logged as a CDK output after a successful deployment - it's the one with "CloudFrontDomain" in its name. You can also view all CDK outputs in the AWS CloudFormation console at any time.
 
 ### Optional: Set up GraphCDN
 
