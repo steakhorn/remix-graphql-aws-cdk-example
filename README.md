@@ -27,7 +27,7 @@ You can see it running at https://d1fr84q9611u1h.cloudfront.net/ (unless I take 
 
 I'm not very good at diagrams, but here's my best attempt at laying out the AWS infrastructure, and how the different pieces interact:
 
-![stack output](packages/infrastructure/infrastructure-diagram.png)
+![A diagram of AWS infrastructure created by the CDK resources in this package](packages/infrastructure/infrastructure-diagram.png)
 
 ---
 
