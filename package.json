@@ -19,6 +19,8 @@
     "cdk:bootstrap": "npm run --prefix packages/infrastructure bootstrap",
     "cdk:synth": "npm run --prefix packages/infrastructure synth",
     "cdk:deploy": "npm run --prefix packages/infrastructure deploy",
+    "cdk:destroy": "npm run --prefix packages/infrastructure destroy",
+    "graphcdn": "npm run --prefix packages/infrastructure graphcdn",
     "build": "npm run api:build && npm run remix:build",
     "deploy": "npm run build && npm run cdk:deploy"
   },

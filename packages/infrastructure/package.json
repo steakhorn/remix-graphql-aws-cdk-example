@@ -9,7 +9,9 @@
     "ls": "cdk ls",
     "synth": "cdk synth",
     "deploy": "cdk deploy --require-approval never",
-    "test": "echo 'test cool'"
+    "destroy": "cdk destroy",
+    "test": "echo 'test cool'",
+    "graphcdn": "graphcdn"
   },
   "dependencies": {
     "@shanecav-example-project/api": "file:packages/api",
